@@ -7,9 +7,9 @@ st.set_page_config(page_title="Mood-Based Movie Recommender", layout="wide")
 st.title("🎬 Mood-Based Movie Recommendation")
 
 sentiment_analyzer = SentimentAnalyzer()
-tmdb = TMDBClient(api_key="242aad67fc75bd3d0fc6a785837d4c28")  # Your TMDB API key here
+tmdb = TMDBClient(api_key="242aad67fc75bd3d0fc6a785837d4c28")
 
-# Mood → genre ID mapping
+
 MOOD_GENRE_MAPPING = {
     'POSITIVE': {
         'genres': [35, 10749],  # Comedy, Romance
@@ -25,7 +25,6 @@ MOOD_GENRE_MAPPING = {
     }
 }
 
-# Initialize session state
 if 'movies' not in st.session_state:
     st.session_state.movies = []
 if 'selected_movie_id' not in st.session_state:
@@ -48,14 +47,13 @@ if st.button("🎲 Recommend a Movie"):
         mood_data = MOOD_GENRE_MAPPING.get(sentiment, MOOD_GENRE_MAPPING['NEUTRAL'])
         st.session_state.mood_data = mood_data
 
-        # Fetch movies by genres
+       
         st.session_state.movies = []
         for genre_id in mood_data['genres']:
             data = tmdb.get_popular_movies(genre_id=genre_id)
             if data and 'results' in data:
                 st.session_state.movies.extend(data['results'])
 
-# Display sentiment and movie suggestions
 if st.session_state.sentiment:
     st.success(f"💡 Your Mood: `{st.session_state.sentiment}` (Confidence: {st.session_state.confidence * 100:.1f}%)")
     st.info(st.session_state.mood_data['description'])
@@ -74,6 +72,5 @@ if st.session_state.sentiment:
             if st.button(f"📖 Show Details - {movie['title']}", key=f"movie_{movie['id']}"):
                 st.session_state.selected_movie_id = movie['id']
 
-# Show selected movie details
 if st.session_state.selected_movie_id:
     show_movie_details(st.session_state.selected_movie_id)
