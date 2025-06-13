@@ -11,7 +11,7 @@ class TMDBClient:
             "api_key": self.api_key,
             "with_genres": genre_id,
             "sort_by": "popularity.desc",
-            "language": "tr-TR"
+            "language": "en-EN"
         }
         response = requests.get(url, params=params)
         if response.status_code == 200:
